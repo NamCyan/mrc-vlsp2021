@@ -174,7 +174,7 @@ class HSUM(nn.Module):
 class XLM_MIXLAYER(nn.Module):
     def __init__(self, config, model_path, num_classes, count, mix_type= "HSUM"):
         super(Net, self).__init__()
-        self.xlmroberta = RobertaModel.from_pretrained(model_path, config=config)
+        self.xlmroberta = XLMRobertaModel.from_pretrained(model_path, config=config)
         if mix_type.upper() == "HSUM":
             self.mixlayer = HSUM(count, config, num_classes)
         # elif mix_type.upper() == "PSUM":
