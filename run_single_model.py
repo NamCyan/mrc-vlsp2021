@@ -48,7 +48,9 @@ logger = logging.getLogger(__name__)
 
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
+    'phobert_large': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
     'vibert': (BertConfig, BertForQuestionAnswering, BertTokenizer)
 }
 
@@ -271,7 +273,7 @@ def load_and_cache_examples(args, tokenizer, evaluate=False, output_examples=Fal
     input_dir = "../cache"
     cached_features_file = os.path.join(input_dir, 'intensive_reader_cached_{}_{}{}_{}_{}_{}_{}'.format(
         args.predict_file.split("/")[-1].replace(".json", ""),
-        'dev' if evaluate else 'train', len(args.train_file.split(".json", "")),
+        'dev' if evaluate else 'train', len(args.train_file.split(",")),
         args.model_type,
         str(args.max_seq_length), str(args.doc_stride), str(args.max_query_length))
     )

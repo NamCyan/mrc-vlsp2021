@@ -1,13 +1,13 @@
 python3 ./run_single_model.py \
-    --model_type xlm_roberta \
+    --model_type xlm_roberta_large \
     --do_train \
     --do_eval \
     --version_2_with_negative \
     --train_file ./data/VLSP_train_split.json \
     --predict_file ./data/VLSP_dev_split.json \
-    --learning_rate 2e-5 \
+    --learning_rate 1e-5 \
     --num_train_epochs 10 \
-    --max_seq_length 256 \
+    --max_seq_length 512 \
     --doc_stride 64 \
     --max_query_length=32 \
     --per_gpu_train_batch_size=16 \
