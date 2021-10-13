@@ -186,10 +186,10 @@ class XLM_MIXLAYER_single(nn.Module):
     
         outputs = self.xlmroberta(input_ids= input_ids, token_type_ids=None, attention_mask=attention_mask, output_hidden_states= True)
         layers = outputs[2]
-        print(len(layers))
+        # print(len(layers))
         extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
         logits = self.mixlayer(layers, extend_attention_mask)
-        print(logits.shape)
+        # print(logits.shape)
         
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1).contiguous()
