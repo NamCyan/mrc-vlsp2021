@@ -173,7 +173,7 @@ class HSUM(nn.Module):
         return avg_logits
 
 class XLM_MIXLAYER_single(nn.Module):
-    def __init__(self, config, model_path, count= 3, mix_type= "HSUM"):
+    def __init__(self, model_path, config, count= 3, mix_type= "HSUM"):
         super(XLM_MIXLAYER_single, self).__init__()
         self.xlmroberta = XLMRobertaModel.from_pretrained(model_path, config=config)
         if mix_type.upper() == "HSUM":
