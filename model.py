@@ -143,6 +143,7 @@ class XLMRobertaForQuestionAnsweringAVPool(nn.Module):
         return outputs  # (loss), start_logits, end_logits, (hidden_states), (attentions)
 
 ####################################################
+from modeling import RobertaLayer
 class HSUM(nn.Module):
     def __init__(self, count, config, num_labels):
         super(HSUM, self).__init__()
