@@ -6,7 +6,7 @@ python3 ./run_single_model.py \
     --train_file ../data/VLSP_data/VLSP_train_split.json \
     --predict_file ../data/VLSP_data/VLSP_dev_split.json \
     --learning_rate 3e-5 \
-    --weight_decy 1e-3 \
+    --weight_decay 1e-3 \
     --num_train_epochs 10 \
     --max_seq_length 512 \
     --doc_stride 64 \
