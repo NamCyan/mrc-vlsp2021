@@ -11,9 +11,9 @@ python3 ./run_single_model.py \
     --max_seq_length 512 \
     --doc_stride 64 \
     --max_query_length=32 \
-    --per_gpu_train_batch_size=16 \
-    --per_gpu_eval_batch_size=16 \
-    --gradient_accumulation_steps 1 \
+    --per_gpu_train_batch_size=8 \
+    --per_gpu_eval_batch_size=8 \
+    --gradient_accumulation_steps 2 \
     --warmup_steps=128 \
     --output_dir result/av_xlm_roberta_lr2e-5_len256_bs16_ep2_wm814 \
     --do_lower_case \
