@@ -171,12 +171,12 @@ class HSUM(nn.Module):
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
         return avg_logits
 
-class XLM_MIXLAYER(nn.Module):
-    def __init__(self, config, model_path, num_classes, count, mix_type= "HSUM"):
-        super(Net, self).__init__()
+class XLM_MIXLAYER_single(nn.Module):
+    def __init__(self, config, model_path, count= 3, mix_type= "HSUM"):
+        super(XLM_MIXLAYER_single, self).__init__()
         self.xlmroberta = XLMRobertaModel.from_pretrained(model_path, config=config)
         if mix_type.upper() == "HSUM":
-            self.mixlayer = HSUM(count, config, num_classes)
+            self.mixlayer = HSUM(count, config, 2)
         # elif mix_type.upper() == "PSUM":
         #     self.mixlayer = PSUM(count, config_phobert, num_classes)
     

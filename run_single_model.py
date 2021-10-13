@@ -40,7 +40,7 @@ from transformers import (WEIGHTS_NAME,
                           RobertaConfig, PhobertTokenizer, RobertaForQuestionAnswering,
                           XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer,
                           BertConfig, BertForQuestionAnswering, BertTokenizer)
-
+from model import XLM_MIXLAYER_single
 
 from transformers import AdamW, get_linear_schedule_with_warmup
 from constant import MODEL_FILE
@@ -51,7 +51,7 @@ MODEL_CLASSES = {
     'phobert_large': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
     'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
-    'vibert': (BertConfig, BertForQuestionAnswering, BertTokenizer)
+    'xlm_roberta_mixlayer': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
 }
 
 def set_seed(args):
@@ -127,7 +127,7 @@ def train(args, train_dataset, model, tokenizer):
                 'start_positions': batch[3],
                 'end_positions':   batch[4],
             }
-            if args.model_type not in ['phobert', 'xlm_roberta']:
+            if 'phobert' not in args.model_type and 'roberta' not in args.model_type:
                 inputs['token_type_ids'] = batch[2]
 
             outputs = model(**inputs, return_dict= False)
@@ -216,7 +216,7 @@ def evaluate(args, model, tokenizer, prefix=""):
                 'input_ids':      batch[0],
                 'attention_mask': batch[1]
             }
-            if args.model_type not in ['phobert', 'xlm_roberta']:
+            if 'phobert' not in args.model_type and 'roberta' not in args.model_type:
                 inputs['token_type_ids'] = batch[2]
                 
             example_indices = batch[3]
@@ -437,7 +437,10 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
-    model = model_class.from_pretrained(model_files['model_file'], config= config)
+    if args.model_type in ["xlm_roberta_mixlayer"]:
+        model = model_class()
+    else:
+        model = model_class.from_pretrained(model_files['model_file'], config= config)
     model.to(args.device)
 
     logger.info("Training/evaluation parameters %s", args)

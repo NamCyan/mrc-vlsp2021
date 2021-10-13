@@ -3,8 +3,8 @@ python3 ./run_av.py \
     --do_train \
     --do_eval \
     --version_2_with_negative \
-    --train_file ./data/VLSP_data/VLSP_train_split.json \
-    --predict_file ./data/VLSP_data/VLSP_dev_split.json \
+    --train_file ../data/VLSP_data/VLSP_train_split.json \
+    --predict_file ../data/VLSP_data/VLSP_dev_split.json \
     --learning_rate 2e-5 \
     --num_train_epochs 10 \
     --max_seq_length 256 \
