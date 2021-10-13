@@ -51,7 +51,7 @@ MODEL_CLASSES = {
     'phobert_large': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
     'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
-    'xlm_roberta_mixlayer': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
+    'xlm_roberta_mixlayer_large': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
 }
 
 def set_seed(args):
@@ -437,8 +437,8 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
-    if args.model_type in ["xlm_roberta_mixlayer"]:
-        model = model_class()
+    if args.model_type in ["xlm_roberta_mixlayer", "xlm_roberta_mixlayer_large"]:
+        model = model_class(model_files['model_file'], config= config)
     else:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     model.to(args.device)

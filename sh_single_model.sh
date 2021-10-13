@@ -1,16 +1,16 @@
 python3 ./run_single_model.py \
-    --model_type xlm_roberta_large \
+    --model_type xlm_roberta_mixlayer_large \
     --do_train \
     --do_eval \
     --version_2_with_negative \
     --train_file ../data/VLSP_data/VLSP_train_split.json \
     --predict_file ../data/VLSP_data/VLSP_dev_split.json \
-    --learning_rate 3e-5 \
+    --learning_rate 2e-5 \
     --weight_decay 1e-3 \
     --num_train_epochs 10 \
     --max_seq_length 512 \
     --doc_stride 64 \
-    --max_query_length=64 \
+    --max_query_length=32 \
     --per_gpu_train_batch_size=4 \
     --per_gpu_eval_batch_size=4 \
     --gradient_accumulation_steps 4 \
