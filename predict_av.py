@@ -54,7 +54,7 @@ MODEL_CLASSES = {
     'phobert_single': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
     'xlm_roberta_single': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
     'xlm_roberta_large_single': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
-    'xlm_roberta_mixlayer_large': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
+    'xlm_roberta_mixlayer_large_single': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
     'vibert': (BertConfig, BertForQuestionAnswering, BertTokenizer)
 }
 
