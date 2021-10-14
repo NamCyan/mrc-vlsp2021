@@ -28,7 +28,9 @@ logger = logging.getLogger(__name__)
 
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
-    'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer)
+    'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
+    'xlm_roberta': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer),
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer)
 }
 
 def set_seed(args):
