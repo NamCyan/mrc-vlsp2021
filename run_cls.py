@@ -5,7 +5,7 @@ from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import math
 import torch.nn.init as init
-from transformers import WEIGHTS_NAME, RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer
+from transformers import WEIGHTS_NAME, RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer, XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer
 from transformers import AdamW, get_linear_schedule_with_warmup
 from utils import print_model_report
 from data_utils import convert_examples_to_cls_features, get_examples
