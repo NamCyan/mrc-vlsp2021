@@ -146,7 +146,7 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
-    if "single" in args.model_path or "mixlayer" in args.model_path:
+    if "single" in args.model_path and not "mixlayer" in args.model_path:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     else:
         model = model_class(model_files['model_file'], config= config)
