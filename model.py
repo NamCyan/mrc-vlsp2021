@@ -195,6 +195,7 @@ class XLM_MIXLAYER_single(nn.Module):
         start_logits = start_logits.squeeze(-1).contiguous()
         end_logits = end_logits.squeeze(-1).contiguous()
 
+        outputs = (start_logits, end_logits,)
         total_loss = None
         if start_positions is not None and end_positions is not None:
             # If we are on multi-GPU, split add a dimension
@@ -212,5 +213,5 @@ class XLM_MIXLAYER_single(nn.Module):
             end_loss = loss_fct(end_logits, end_positions)
             total_loss = (start_loss + end_loss) / 2
 
-            output = (start_logits, end_logits) + outputs[2:]
-            return ((total_loss,) + output) if total_loss is not None else output
+            outputs = (total_loss,) + outputs
+        return outputs

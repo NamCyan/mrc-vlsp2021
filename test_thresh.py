@@ -11,6 +11,7 @@ parser.add_argument('--input_null_files', type=str, default="null_odds.json")
 parser.add_argument('--input_nbest_files', type=str, default="nbest_predictions.json")
 parser.add_argument('--thresh', default=0, type=float)
 parser.add_argument("--predict_file", default="data/dev-v2.0.json")
+parser.add_argument("--predict_test", action='store_true', help="Whether to test.")
 args = parser.parse_args()
 
 with open(args.input_null_files, 'r') as f:
@@ -37,8 +38,14 @@ def get_pred(thresh):
 
 examples = get_examples(args.predict_file, is_training= False)
 preds = get_pred(args.thresh)
-evalrs = squad_evaluate(examples, preds, null_score, args.thresh)
-print(evalrs)
+
+if not args.predict_test:
+    evalrs = squad_evaluate(examples, preds, null_score, args.thresh)
+    print(json.dumps(evalrs, indent= 4))
+else:
+    print(json.dumps(preds, indent= 4, ensure_ascii=False))
+    with open("results.json", "w") as f:
+        json.dump(preds, f, indent= 4)
   
 
 
