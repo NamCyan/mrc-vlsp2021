@@ -1,5 +1,9 @@
 python3 ./run_single_model.py \
+<<<<<<< HEAD
+    --model_type xlm_roberta_large \
+=======
     --model_type xlm_roberta_mixlayer_large \
+>>>>>>> 3594862dc203105b34527ec6cd9b02754159c7fb
     --do_eval \
     --version_2_with_negative \
     --train_file ../data/VLSP_data/VLSP_train_split.json \
