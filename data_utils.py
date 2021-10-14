@@ -119,7 +119,7 @@ def convert_examples_to_cls_features(examples, tokenizer, max_length, return_dat
     pad_id = tokenizer.pad_token_id
     for idx, example in enumerate(examples):
         id_map[idx] = example.qas_id
-        text = example.context_text
+        text = xample.context_text
         question = example.question_text
         is_imposible = int(example.is_impossible)
 

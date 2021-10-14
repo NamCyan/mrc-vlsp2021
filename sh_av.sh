@@ -1,5 +1,5 @@
 python3 ./run_av.py \
-    --model_type xlm_roberta \
+    --model_type xlm_roberta_large \
     --do_train \
     --do_eval \
     --version_2_with_negative \
@@ -7,12 +7,12 @@ python3 ./run_av.py \
     --predict_file ../data/VLSP_data/VLSP_dev_split.json \
     --learning_rate 2e-5 \
     --num_train_epochs 10 \
-    --max_seq_length 256 \
+    --max_seq_length 512 \
     --doc_stride 64 \
     --max_query_length=32 \
-    --per_gpu_train_batch_size=16 \
-    --per_gpu_eval_batch_size=16 \
-    --gradient_accumulation_steps 1 \
+    --per_gpu_train_batch_size=4 \
+    --per_gpu_eval_batch_size=4 \
+    --gradient_accumulation_steps 4 \
     --weight_decay 1e-3 \
     --warmup_steps=128 \
     --output_dir result/av_phobert_lr2e-5_len256_bs16_ep2_wm814 \

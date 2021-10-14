@@ -48,6 +48,7 @@ logger = logging.getLogger(__name__)
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, PhobertForQuestionAnsweringAVPool, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringAVPool, XLMRobertaTokenizer),
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringAVPool, XLMRobertaTokenizer)
 }
 
 def set_seed(args):
