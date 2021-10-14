@@ -40,7 +40,7 @@ from transformers import (WEIGHTS_NAME,
                           RobertaConfig, PhobertTokenizer, RobertaForQuestionAnswering,
                           XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer,
                           BertConfig, BertForQuestionAnswering, BertTokenizer)
-from model import PhobertForQuestionAnsweringAVPool, XLMRobertaForQuestionAnsweringAVPool
+from model import PhobertForQuestionAnsweringAVPool, XLMRobertaForQuestionAnsweringAVPool, XLM_MIXLAYER_single
 
 
 from transformers import AdamW, get_linear_schedule_with_warmup
