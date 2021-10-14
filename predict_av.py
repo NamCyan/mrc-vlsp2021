@@ -54,6 +54,7 @@ MODEL_CLASSES = {
     'phobert_single': (RobertaConfig, RobertaForQuestionAnswering, PhobertTokenizer),
     'xlm_roberta_single': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
     'xlm_roberta_large_single': (XLMRobertaConfig, XLMRobertaForQuestionAnswering, XLMRobertaTokenizer),
+    'xlm_roberta_mixlayer_large': (XLMRobertaConfig, XLM_MIXLAYER_single, XLMRobertaTokenizer),
     'vibert': (BertConfig, BertForQuestionAnswering, BertTokenizer)
 }
 
@@ -145,7 +146,7 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
-    if "single" in args.model_path:
+    if "single" in args.model_path or "mixlayer" in args.model_path:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     else:
         model = model_class(model_files['model_file'], config= config)
