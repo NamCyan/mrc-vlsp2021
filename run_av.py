@@ -48,6 +48,7 @@ logger = logging.getLogger(__name__)
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, PhobertForQuestionAnsweringAVPool, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringAVPool, XLMRobertaTokenizer),
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringAVPool, XLMRobertaTokenizer)
 }
 
 def set_seed(args):
@@ -231,11 +232,11 @@ def evaluate(args, model, tokenizer, prefix=""):
     logger.info("  Evaluation done in total %f secs (%f sec per example)", evalTime, evalTime / len(dataset))
 
     # Compute predictions
-    output_prediction_file = os.path.join(args.output_dir, prefix, "predictions_{}.json".format(prefix))
-    output_nbest_file = os.path.join(args.output_dir, prefix, "nbest_predictions_{}.json".format(prefix))
+    output_prediction_file = os.path.join(args.output_dir, "predictions_{}.json".format(prefix))
+    output_nbest_file = os.path.join(args.output_dir, "nbest_predictions_{}.json".format(prefix))
 
     if args.version_2_with_negative:
-        output_null_log_odds_file = os.path.join(args.output_dir, prefix, "null_odds_{}.json".format(prefix))
+        output_null_log_odds_file = os.path.join(args.output_dir, "null_odds_{}.json".format(prefix))
     else:
         output_null_log_odds_file = None
 
@@ -409,7 +410,7 @@ def main():
 
     # Setup CUDA, GPU & distributed training
     if args.local_rank == -1:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
         args.n_gpu = 1 #torch.cuda.device_count()
     else:  # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
         torch.cuda.set_device(args.local_rank)
