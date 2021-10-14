@@ -10,9 +10,9 @@ python3 ./run_av.py \
     --max_seq_length 512 \
     --doc_stride 64 \
     --max_query_length=32 \
-    --per_gpu_train_batch_size=4 \
-    --per_gpu_eval_batch_size=4 \
-    --gradient_accumulation_steps 4 \
+    --per_gpu_train_batch_size=2 \
+    --per_gpu_eval_batch_size=2 \
+    --gradient_accumulation_steps 8 \
     --weight_decay 1e-3 \
     --warmup_steps=128 \
     --output_dir result/av_phobert_lr2e-5_len256_bs16_ep2_wm814 \
