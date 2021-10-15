@@ -204,7 +204,7 @@ def main():
             if "single" in args.model_path:
                 outputs = model(input_ids= batch[0], attention_mask= batch[1], token_type_ids= None, return_dict= False)
             else:
-                outputs = model(**inputs)
+                outputs = model(input_ids= batch[0], attention_mask= batch[1], token_type_ids= None)
 
         for i, example_index in enumerate(example_indices):
             eval_feature = features[example_index.item()]
