@@ -5,9 +5,9 @@ python3 ./run_cls.py \
     --do_eval \
     --do_train \
     --do_lower_case \
-    --train_file ../data/VLSP_data/VLSP_train_split.json \
+    --train_file ../data/VLSP_data/VLSP_train_split.json,../data/full_train.json \
     --dev_file ../data/VLSP_data/VLSP_dev_split.json \
-    --max_seq_len 256 \
+    --max_seq_len 512 \
     --per_gpu_train_batch_size=4   \
     --per_gpu_eval_batch_size=4  \
     --gradient_accumulation_steps 4 \
