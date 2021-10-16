@@ -114,25 +114,28 @@ def convert_examples_to_cls_features(examples, tokenizer, max_length, return_dat
     type_ids = []
     impossibles = []
 
-    cls_id = tokenizer.cls_token_id
-    sep_id = tokenizer.sep_token_id
-    pad_id = tokenizer.pad_token_id
+    cls_token= tokenizer.cls_token
+    sep_token = tokenizer.sep_token
+    pad_token = tokenizer.pad_token
     for idx, example in enumerate(examples):
         id_map[idx] = example.qas_id
         text = example.context_text
         question = example.question_text
         is_imposible = int(example.is_impossible)
 
-        question_token_ids = tokenizer.encode(question)[1:-1]
-        text_token_ids = tokenizer.encode(text)[1:-1]
+        question_tokens = tokenizer.tokenize(question)
+        text_tokens = tokenizer.tokenize(text)
         
-        _truncate_seq_pair(question_token_ids, text_token_ids, max_length - 4) #placehold for <s>...</s></s>...</s>
+        _truncate_seq_pair(question_tokens, text_tokens, max_length - 4) #placehold for <s>...</s></s>...</s>
         
-        input_id = [cls_id] + question_token_ids + [sep_id, sep_id] + text_token_ids + [sep_id]
+        input_id = [cls_token] + question_tokens + [sep_token, sep_token] + text_tokens + [sep_token]
         attention_mask = [1] * len(input_id)
-        _padding(input_id, max_length, pad_id)
-        _padding(attention_mask, max_length, 0)
+        assert len(input_id) == len(attention_mask), f"{len(input_id)} vs {len(attention_mask)}"
+        if len(input_id) < max_length:
+            input_id = input_id + [pad_token] * (max_length - len(input_id))
+            attention_mask = attention_mask + [0] * (max_length - len(attention_mask))
         
+        input_id = tokenizer.convert_tokens_to_ids(input_id)
         type_id = [0] * len(input_id)
 
         assert len(input_id) == max_length, "Error with input length {} vs {}".format(len(input_id), max_length)
