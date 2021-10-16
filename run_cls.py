@@ -47,7 +47,7 @@ def train(args, model, tokenizer):
 
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, args.n_gpu)
     train_dataset, id_map = load_and_cache_examples(args, tokenizer)
-    train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
+    train_sampler = RandomSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
     print("="*100)
 
@@ -60,7 +60,7 @@ def train(args, model, tokenizer):
 
 
     # Prepare optimizer and schedule (linear warmup and decay)
-    no_decay = ['bias', 'LayerNorm.weight']
+    no_decay = ['bias', 'LayerNorm.weight', 'LayerNorm.bias']
     optimizer_grouped_parameters = [
         {'params': [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)], 'weight_decay': args.weight_decay},
         {'params': [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
@@ -69,17 +69,7 @@ def train(args, model, tokenizer):
     optimizer = AdamW(optimizer_grouped_parameters, lr=args.lr, eps=args.adam_epsilon)
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=args.warmup_steps, num_training_steps=t_total)
 
-
-    # multi-gpu training
-    if args.n_gpu > 1:
-        model = torch.nn.DataParallel(model)
-
-    # Distributed training
-    if args.local_rank != -1:
-        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank],
-                                                          output_device=args.local_rank,
-                                                          find_unused_parameters=True)
-      # Train!
+    # Train!
     logger.info("***** Running training *****")
     logger.info("  Num examples = %d", len(train_dataset))
     logger.info("  Num Epochs = %d", args.epochs)
@@ -103,11 +93,9 @@ def train(args, model, tokenizer):
                       'attention_mask': batch[1],
                       'labels':         batch[3]}
 
-            outputs = model(**inputs)
+            outputs = model(input_ids= batch[0], attention_mask= batch[1], labels= batch[3])
             loss = outputs[0]  # model outputs are always tuple in transformers (see doc)
-  
-            if args.n_gpu > 1:
-                loss = loss.mean() # mean() to average on multi-gpu parallel training
+
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
 
@@ -122,7 +110,7 @@ def train(args, model, tokenizer):
                 model.zero_grad()
                 global_step += 1
 
-                if args.local_rank in [-1, 0] and args.logging_steps > 0 and global_step % args.logging_steps == 0:
+                if args.logging_steps > 0 and global_step % args.logging_steps == 0:
                     logs = {}
                     if args.local_rank == -1 and args.evaluate_during_training:  # Only evaluate when single GPU otherwise metrics may not average well
                         results = evaluate(args, model, tokenizer)
@@ -143,13 +131,12 @@ def train(args, model, tokenizer):
                     logger.info("  step = %d", global_step)
                     # print(json.dumps({**logs, **{'step': global_step}}, indent= 4))
 
-                if args.local_rank in [-1, 0] and args.save_steps > 0 and global_step % args.save_steps == 0:
+                if args.save_steps > 0 and global_step % args.save_steps == 0:
                     # Save model checkpoint
                     output_dir = os.path.join(args.output_dir, 'checkpoint-{}'.format(global_step))
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
-                    model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
-                    model_to_save.save_pretrained(output_dir)
+                    model.save_pretrained(output_dir)
                     torch.save(args, os.path.join(output_dir, 'training_args.bin'))
                     logger.info("Saving model checkpoint to %s", output_dir)
 
@@ -174,12 +161,8 @@ def evaluate(args, model, tokenizer, prefix=""):
     eval_sampler = SequentialSampler(eval_dataset)
     eval_dataloader = DataLoader(eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size)
 
-    if not os.path.exists(eval_output_dir) and args.local_rank in [-1, 0]:
+    if not os.path.exists(eval_output_dir):
         os.makedirs(eval_output_dir)
-
-    # multi-gpu eval
-    if args.n_gpu > 1:
-        model = torch.nn.DataParallel(model)
 
     # Eval!
     logger.info("***** Running evaluation {} *****".format(prefix))
@@ -202,7 +185,7 @@ def evaluate(args, model, tokenizer, prefix=""):
                       'attention_mask': batch[1],
                       'labels':         batch[3]}
            
-            outputs = model(**inputs)
+            outputs = model(input_ids= batch[0], attention_mask= batch[1], labels= batch[3])
             tmp_eval_loss, logits = outputs[:2]
 
             eval_loss += tmp_eval_loss.mean().item()
@@ -363,14 +346,9 @@ def main():
         raise ValueError("Output directory ({}) already exists and is not empty. Use --overwrite_output_dir to overcome.".format(args.output_dir))
 
 
-    if args.local_rank == -1:
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        args.n_gpu = 1 #torch.cuda.device_count()
-    else:  # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
-        torch.cuda.set_device(args.local_rank)
-        device = torch.device("cuda", args.local_rank)
-        torch.distributed.init_process_group(backend='nccl')
-        args.n_gpu = 1
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    args.n_gpu = 1 #torch.cuda.device_count()
+
     args.device = device
 
     logging.basicConfig(format = '%(asctime)s - %(levelname)s - %(name)s -   %(message)s',
@@ -391,8 +369,6 @@ def main():
     tokenizer.do_lower_case = args.do_lower_case
     model = model_class.from_pretrained(model_files['model_file'], config=config)
 
-    if args.local_rank == 0:
-        torch.distributed.barrier()  # Make sure only the first process in distributed training will download model & vocab
 
     model.to(args.device)
 
@@ -406,9 +382,9 @@ def main():
 
 
     # Saving best-practices: if you use defaults names for the model, you can reload it using from_pretrained()
-    if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
+    if args.do_train:
         # Create output directory if needed
-        if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
+        if not os.path.exists(args.output_dir):
             os.makedirs(args.output_dir)
 
         logger.info("Saving model checkpoint to %s", args.output_dir)
@@ -428,7 +404,7 @@ def main():
 
     # Evaluation
     results = {}
-    if args.do_eval and args.local_rank in [-1, 0]:
+    if args.do_eval:
         tokenizer = tokenizer_class.from_pretrained(args.output_dir, do_lower_case= args.do_lower_case)
         checkpoints = [args.output_dir]
         if args.eval_all_checkpoints:
@@ -445,7 +421,7 @@ def main():
             result = dict((k + '_{}'.format(global_step), v) for k, v in result.items())
             results.update(result)
 
-    if args.do_predict and args.local_rank in [-1, 0]:
+    if args.do_predict:
         # checkpoint = args.model_name_or_path
         # model = model_class.from_pretrained(checkpoint, force_download=True)
         # model.to(args.device)
@@ -455,10 +431,6 @@ def main():
         eval_dataset, id_map = load_and_cache_examples(args, tokenizer, predict= True)
         eval_sampler = SequentialSampler(eval_dataset)
         eval_dataloader = DataLoader(eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size)
-
-        # multi-gpu eval
-        if args.n_gpu > 1:
-            model = torch.nn.DataParallel(model)
 
         # Eval!
         logger.info("***** Running prediction *****")
