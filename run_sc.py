@@ -129,7 +129,7 @@ def train(args, train_dataset, model, tokenizer):
             if 'phobert' not in args.model_type and 'roberta' not in args.model_type:
                 inputs['token_type_ids'] = batch[2]
 
-            outputs = model(**inputs, return_dict= False)
+            outputs = model(**inputs)
             loss = outputs[0]  # model outputs are always tuple in transformers (see doc)
 
             if args.n_gpu > 1:
@@ -221,7 +221,7 @@ def evaluate(args, model, tokenizer, prefix=""):
                 
             example_indices = batch[3]
 
-            outputs = model(**inputs, return_dict= False)
+            outputs = model(**inputs)
 
         for i, example_index in enumerate(example_indices):
             eval_feature = features[example_index.item()]
