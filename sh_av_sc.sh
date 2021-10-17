@@ -18,7 +18,6 @@ python3 ./run_sc.py \
     --output_dir result/av_phobert_lr2e-5_len256_bs16_ep2_wm814 \
     --do_lower_case \
     --sc_ques \
-    --verbose_logging \
     --eval_all_checkpoints \
     --save_steps 2000 \
     --n_best_size 20 \
