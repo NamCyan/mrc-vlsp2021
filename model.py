@@ -308,7 +308,7 @@ class XLMRobertaForQuestionAnsweringSeqSC(nn.Module):
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, pq_end_pos=None, position_ids=None, head_mask=None,
                 inputs_embeds=None, start_positions=None, end_positions=None, is_impossibles=None):
 
-        outputs = self.albert(
+        outputs = self.xlm_roberta(
             input_ids=input_ids,
             attention_mask=attention_mask,
             token_type_ids=token_type_ids,
