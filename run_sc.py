@@ -48,7 +48,9 @@ logger = logging.getLogger(__name__)
 
 MODEL_CLASSES = {
     'xlm_roberta_sc_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqSC, XLMRobertaTokenizer),
-    'xlm_roberta_sc': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqSC, XLMRobertaTokenizer)
+    'xlm_roberta_sc': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqSC, XLMRobertaTokenizer),
+    'xlm_roberta_mixlayer_sc_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqSC, XLMRobertaTokenizer),
+    'xlm_roberta_mixlayer_sc': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqSC, XLMRobertaTokenizer)
 }
 
 def set_seed(args):
