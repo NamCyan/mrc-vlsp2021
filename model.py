@@ -314,7 +314,7 @@ class XLMRobertaForQuestionAnsweringSeqSC(nn.Module):
             token_type_ids=token_type_ids,
             position_ids=position_ids,
             head_mask=head_mask,
-            inputs_embeds=inputs_embeds
+            inputs_embeds=inputs_embeds,
         )
         
         sequence_output = outputs[0]
@@ -384,7 +384,8 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
             token_type_ids=token_type_ids,
             position_ids=position_ids,
             head_mask=head_mask,
-            inputs_embeds=inputs_embeds
+            inputs_embeds=inputs_embeds,
+            output_hidden_states= True
         )
 
         layers = outputs[2]
