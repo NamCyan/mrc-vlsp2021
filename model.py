@@ -371,7 +371,7 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
         self.mixlayer = HSUM(count, config, 2)
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
         self.attention = SCAttention(config.hidden_size, config.hidden_size)
-        self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
+        # self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
         self.init_weights()
 
     def init_weights(self):
@@ -391,22 +391,29 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
             output_hidden_states= True
         )
 
+        
+        sequence_outputs = []
         layers = outputs[2]
         # print(len(layers))
+        
+        # extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
+        # sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)
+        for i in range(self.count):
+            sequence_output = layers[-i-1]
+            query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
+                split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
+
+            if self.sc_ques:
+                sequence_output = self.attention(sequence_output, query_sequence_output, query_attention_mask)
+            else:
+                sequence_output = self.attention(sequence_output, context_sequence_output, context_attention_mask)
+            sequence_outputs.append(sequence_output)
+        # sequence_output = sequence_output + outputs[0]
+
         extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
-        sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)
+        logits = self.mixlayer(sequence_outputs, extend_attention_mask)
 
-        query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
-            split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
-
-        if self.sc_ques:
-            sequence_output = self.attention(sequence_output, query_sequence_output, query_attention_mask)
-        else:
-            sequence_output = self.attention(sequence_output, context_sequence_output, context_attention_mask)
-
-        sequence_output = sequence_output + outputs[0]
-
-        logits = self.qa_outputs(sequence_output)
+        # logits = self.qa_outputs(sequence_output)
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
