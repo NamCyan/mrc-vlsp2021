@@ -368,6 +368,7 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
         self.args = args
         self.sc_ques = sc_ques
         self.num_labels = config.num_labels
+        self.count = count
         self.mixlayer = HSUM(count, config, 2)
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
         self.attention = SCAttention(config.hidden_size, config.hidden_size)
