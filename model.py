@@ -171,6 +171,9 @@ class HSUM(nn.Module):
             else:
                 logits = output 
             logitses.append(logits)
+        
+        if return_output:
+            return output
 
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
         return avg_logits
@@ -392,29 +395,24 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
             output_hidden_states= True
         )
 
-        
-        sequence_outputs = []
+
         layers = outputs[2]
         # print(len(layers))
         
-        # extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
-        # sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)
-        for i in range(self.count):
-            sequence_output = layers[-i-1]
-            query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
-                split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
-
-            if self.sc_ques:
-                sequence_output = self.attention(sequence_output, query_sequence_output, query_attention_mask)
-            else:
-                sequence_output = self.attention(sequence_output, context_sequence_output, context_attention_mask)
-            sequence_outputs.append(sequence_output)
-        # sequence_output = sequence_output + outputs[0]
-
         extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
-        logits = self.mixlayer(sequence_outputs, extend_attention_mask)
+        sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)
 
-        # logits = self.qa_outputs(sequence_output)
+        query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
+            split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
+
+        if self.sc_ques:
+            sequence_output_ = self.attention(sequence_output, query_sequence_output, query_attention_mask)
+        else:
+            sequence_output_ = self.attention(sequence_output, context_sequence_output, context_attention_mask)
+      
+        sequence_output = sequence_output_ + sequence_output
+
+        logits = self.qa_outputs(sequence_output)
         start_logits, end_logits = logits.split(1, dim=-1)
         start_logits = start_logits.squeeze(-1)
         end_logits = end_logits.squeeze(-1)
@@ -434,7 +432,6 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
             start_positions.clamp_(0, ignored_index)
             end_positions.clamp_(0, ignored_index)
             is_impossibles.clamp_(0, ignored_index)
-
             loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
             start_loss = loss_fct(start_logits, start_positions)
             end_loss = loss_fct(end_logits, end_positions)
