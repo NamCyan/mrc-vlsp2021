@@ -375,8 +375,8 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
         self.mixlayer = HSUM(count, config, 2)
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
         self.attention = SCAttention(config.hidden_size, config.hidden_size)
-        # self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
-        # self.init_weights()
+        self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
+        self.init_weights()
 
     def init_weights(self):
         nn.init.xavier_uniform_(self.qa_outputs.weight.data)
