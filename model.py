@@ -159,14 +159,17 @@ class HSUM(nn.Module):
         init.xavier_uniform_(self.classifier.weight.data)
         self.classifier.bias.data.uniform_(0, 0)
 
-    def forward(self, layers, attention_mask):
+    def forward(self, layers, attention_mask, return_output = False):
         logitses = []
         output = torch.zeros_like(layers[0])
 
         for i in range(self.count):
             output = output + layers[-i-1]
             output = self.pre_layers[i](output, attention_mask)[0]
-            logits = self.classifier(output)
+            if not return_output:
+                logits = self.classifier(output)
+            else:
+                logits = output 
             logitses.append(logits)
 
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
@@ -391,7 +394,7 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
         layers = outputs[2]
         # print(len(layers))
         extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
-        sequence_output = self.mixlayer(layers, extend_attention_mask)
+        sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)
 
         query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
             split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
