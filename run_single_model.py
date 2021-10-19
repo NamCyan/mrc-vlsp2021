@@ -444,7 +444,7 @@ def main():
         tokenizer.do_lower_case = args.do_lower_case
 
     if args.model_type in ["xlm_roberta_mixlayer", "xlm_roberta_mixlayer_large"]:
-        model = model_class(model_files['model_file'], config= config, mix_count= args.mix_count, mix_type = args.mix_type)
+        model = model_class(model_files['model_file'], config= config, count= args.mix_count, mix_type = args.mix_type)
     else:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     model.to(args.device)
