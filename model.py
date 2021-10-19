@@ -198,7 +198,10 @@ class PSUM(nn.Module):
 
         for i in range(self.count):
             layer = self.pre_layers[i](layers[-i-1], attention_mask)[0]
-            logits = self.classifier(layer)
+            if return_output:
+                logits = layer
+            else:
+                logits = self.classifier(layer)
             logitses.append(logits)
 
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
@@ -398,7 +401,7 @@ class XLMRobertaForQuestionAnsweringSeqSCMixLayer(nn.Module):
         self.sc_ques = sc_ques
         self.num_labels = config.num_labels
         self.count = count
-        self.mixlayer = HSUM(count, config, 2)
+        self.mixlayer = PSUM(count, config, 2)
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
         self.attention = SCAttention(config.hidden_size, config.hidden_size)
         self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
