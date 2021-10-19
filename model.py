@@ -202,7 +202,7 @@ class PSUM(nn.Module):
             logitses.append(logits)
 
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
-        return logitses, avg_logits
+        return avg_logits
 
 class XLM_MIXLAYER_single(nn.Module):
     def __init__(self, model_path, config, count= 4, mix_type= "HSUM"):
