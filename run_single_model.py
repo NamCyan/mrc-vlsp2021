@@ -410,7 +410,7 @@ def main():
     args = get_args()
     args.output_dir = "../result/av_single_{}_{}_lr{}_len{}_bs{}_ep{}_wm{}".format(args.predict_file.split("/")[-1].replace(".json", ""), args.model_type, args.learning_rate, args.max_seq_length, args.per_gpu_train_batch_size, args.num_train_epochs, args.warmup_steps)
     if "mixlayer" in args.model_type:
-        args.output_dir += "_mixtype{}_mixcount{}".format(args.mix_type, args.mixcount)
+        args.output_dir += "_mixtype{}_mixcount{}".format(args.mix_type, args.mix_count)
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train and not args.overwrite_output_dir:
         raise ValueError("Output directory ({}) already exists and is not empty. Use --overwrite_output_dir to overcome.".format(args.output_dir))
 
