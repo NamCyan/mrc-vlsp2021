@@ -320,10 +320,6 @@ def get_args():
                         help="Model type selected in the list: " + ", ".join(MODEL_CLASSES.keys()))
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model checkpoints and predictions will be written.")
-    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"]
-                        help="Mix type for mix layer method")
-    parser.add_argument("--mix_count", default=None, type=int,
-                        help="Number of mix layers")
 
     ## Other parameters
     parser.add_argument("--padding_side", default="right", type=str,
@@ -340,6 +336,10 @@ def get_args():
     parser.add_argument('--null_score_diff_threshold', type=float, default=0.0,
                         help="If null_score - best_non_null is greater than the threshold predict null.")
 
+    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"],
+                        help="Mix type for mix layer method")
+    parser.add_argument("--mix_count", default=None, type=int,
+                        help="Number of mix layers")
     parser.add_argument("--max_seq_length", default=384, type=int,
                         help="The maximum total input sequence length after WordPiece tokenization. Sequences "
                              "longer than this will be truncated, and sequences shorter than this will be padded.")
