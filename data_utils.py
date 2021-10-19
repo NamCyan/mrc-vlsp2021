@@ -146,7 +146,7 @@ def convert_examples_to_cls_features(examples, tokenizer, max_length, return_dat
         attention_masks.append(attention_mask)
         type_ids.append(type_id)
         impossibles.append(is_imposible)
-        if idx < 5:
+        if idx < 0:
             print(" ".join(tokenizer.convert_ids_to_tokens(input_id)))
             print(attention_mask)
             print(type_id)
