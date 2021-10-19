@@ -82,6 +82,11 @@ def get_args():
                         help="The output directory where the model checkpoints and predictions will be written.")
 
     ## Other parameters
+
+    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"],
+                        help="Mix type for mix layer method")
+    parser.add_argument("--mix_count", default=None, type=int,
+                        help="Number of mix layers")
     parser.add_argument("--predict_file", default=None, type=str,
                         help="The input evaluation file. If a data dir is specified, will look for the file there" +
                              "If no data dir or train/predict files are specified, will run with tensorflow_datasets.")
@@ -147,7 +152,9 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
-    if "single" in args.model_path and not "mixlayer" in args.model_path:
+    if "mixlayer" in args.model_path:
+        model = model_class(model_files['model_file'], config= config, count = args.mix_count, mix_type= args.mix_type)
+    elif "single" in args.model_path:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     else:
         model = model_class(model_files['model_file'], config= config)
