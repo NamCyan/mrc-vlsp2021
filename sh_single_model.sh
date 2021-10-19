@@ -1,5 +1,7 @@
 python3 ./run_single_model.py \
     --model_type xlm_roberta_mixlayer_large \
+    --mix_type PSUM \
+    --mix_count 4 \
     --do_eval \
     --do_train \
     --version_2_with_negative \

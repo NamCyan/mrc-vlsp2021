@@ -178,14 +178,40 @@ class HSUM(nn.Module):
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
         return avg_logits
 
+class PSUM(nn.Module):
+    def __init__(self, count, config, num_labels):
+        super(PSUM, self).__init__()
+        self.count = count
+        self.num_labels = num_labels
+        self.pre_layers = torch.nn.ModuleList()
+        self.classifier = torch.nn.Linear(config.hidden_size, num_labels)
+        self.init_weight()
+        for i in range(count):
+            self.pre_layers.append(RobertaLayer(config))
+
+    def init_weight(self):
+        init.xavier_uniform_(self.classifier.weight.data)
+        self.classifier.bias.data.uniform_(0, 0)
+
+    def forward(self, layers, attention_mask, return_output= False):
+        logitses = []
+
+        for i in range(self.count):
+            layer = self.pre_layers[i](layers[-i-1], attention_mask)[0]
+            logits = self.classifier(layer)
+            logitses.append(logits)
+
+        avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
+        return logitses, avg_logits
+
 class XLM_MIXLAYER_single(nn.Module):
     def __init__(self, model_path, config, count= 4, mix_type= "HSUM"):
         super(XLM_MIXLAYER_single, self).__init__()
         self.xlmroberta = XLMRobertaModel.from_pretrained(model_path, config=config)
         if mix_type.upper() == "HSUM":
             self.mixlayer = HSUM(count, config, 2)
-        # elif mix_type.upper() == "PSUM":
-        #     self.mixlayer = PSUM(count, config_phobert, num_classes)
+        elif mix_type.upper() == "PSUM":
+            self.mixlayer = PSUM(count, config, 2)
     
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None,
                 inputs_embeds=None, start_positions=None, end_positions=None, is_impossibles=None, return_dict= False):

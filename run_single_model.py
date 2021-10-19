@@ -320,6 +320,10 @@ def get_args():
                         help="Model type selected in the list: " + ", ".join(MODEL_CLASSES.keys()))
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model checkpoints and predictions will be written.")
+    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"]
+                        help="Mix type for mix layer method")
+    parser.add_argument("--mix_count", default=None, type=int,
+                        help="Number of mix layers")
 
     ## Other parameters
     parser.add_argument("--padding_side", default="right", type=str,
@@ -405,6 +409,8 @@ def main():
     
     args = get_args()
     args.output_dir = "../result/av_single_{}_{}_lr{}_len{}_bs{}_ep{}_wm{}".format(args.predict_file.split("/")[-1].replace(".json", ""), args.model_type, args.learning_rate, args.max_seq_length, args.per_gpu_train_batch_size, args.num_train_epochs, args.warmup_steps)
+    if "mixlayer" in args.model_type:
+        args.output_dir += "_mixtype{}_mixcount{}".format(args.mix_type, args.mixcount)
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train and not args.overwrite_output_dir:
         raise ValueError("Output directory ({}) already exists and is not empty. Use --overwrite_output_dir to overcome.".format(args.output_dir))
 
@@ -438,7 +444,7 @@ def main():
         tokenizer.do_lower_case = args.do_lower_case
 
     if args.model_type in ["xlm_roberta_mixlayer", "xlm_roberta_mixlayer_large"]:
-        model = model_class(model_files['model_file'], config= config)
+        model = model_class(model_files['model_file'], config= config, mix_count= args.mix_count, mix_type = args.mix_type)
     else:
         model = model_class.from_pretrained(model_files['model_file'], config= config)
     model.to(args.device)
