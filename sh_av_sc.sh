@@ -6,7 +6,7 @@ python3 ./run_sc.py \
     --train_file ../data/VLSP_data/VLSP_train_split.json \
     --predict_file ../data/VLSP_data/VLSP_dev_split.json \
     --learning_rate 2e-5 \
-    --num_train_epochs 10 \
+    --num_train_epochs 15 \
     --max_seq_length 400 \
     --doc_stride 128 \
     --max_query_length=64 \
