@@ -172,7 +172,7 @@ def evaluate(args, model, tokenizer, prefix=""):
     # Eval!
     logger.info("***** Running evaluation {} *****".format(prefix))
     logger.info("  Num examples = %d", len(eval_dataset))
-    logger.info("  Batch size = %d", args.test_batch_size)
+    logger.info("  Batch size = %d", args.eval_batch_size)
 
     eval_loss = 0.0
     nb_eval_steps = 0
