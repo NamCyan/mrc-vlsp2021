@@ -577,7 +577,7 @@ class TrmCoAttLayer(nn.Module):
 
 class XLMRobertaForQuestionAnsweringSeqTrm(nn.Module):
     def __init__(self, model_path, config, args, sc_ques= True):
-        super(XLMRobertaForQuestionAnsweringSeqTrm, self).__init__(config)
+        super(XLMRobertaForQuestionAnsweringSeqTrm, self).__init__()
         self.num_labels = config.num_labels
         self.sc_ques = sc_ques
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
