@@ -323,10 +323,10 @@ def get_args():
                         help="Batch size per GPU/CPU for training.")
     parser.add_argument("--per_gpu_eval_batch_size", default=32, type=int,
                         help="Batch size per GPU/CPU for evaluation.")
-    parser.add_argument('--train_batch_size', type=int, default=32, 
-                        help='(default=%(default)d)')
-    parser.add_argument('--test_batch_size', type=int, default=32, 
-                        help='(default=%(default)d)')
+    # parser.add_argument('--train_batch_size', type=int, default=32, 
+    #                     help='(default=%(default)d)')
+    # parser.add_argument('--test_batch_size', type=int, default=32, 
+    #                     help='(default=%(default)d)')
 
     parser.add_argument('--logging_steps', type=int, default=50,
                         help="Log every X updates steps.")
@@ -353,7 +353,7 @@ def main():
         raise ValueError("Output directory ({}) already exists and is not empty. Use --overwrite_output_dir to overcome.".format(args.output_dir))
 
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     args.n_gpu = 1 #torch.cuda.device_count()
 
     args.device = device
