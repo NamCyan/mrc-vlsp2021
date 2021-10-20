@@ -42,6 +42,12 @@ MODEL_FILE = {
                                 "config_file": "xlm-roberta-base",
                                 "merges_file": None,
                                 "vocab_file": None},
+
+    'xlm_roberta_ma_large': {"model_file": "xlm-roberta-large",
+                    "config_file": "xlm-roberta-large",
+                    "merges_file": None,
+                    "vocab_file": None},
+                    
     'vibert': {"model_file": "FPTAI/vibert-base-cased",
                "config_file": "FPTAI/vibert-base-cased",
                "merges_file": None,
