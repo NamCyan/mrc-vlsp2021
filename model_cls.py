@@ -30,6 +30,7 @@ class HSUM(nn.Module):
         for i in range(self.count):
             output = output + layers[-i-1]
             output = self.pre_layers[i](output, attention_mask)
+            print(output.shape)
             out = self.pooler(output)
             logits = self.classifier(out)
             if labels is not None:
