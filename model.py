@@ -593,7 +593,7 @@ class XLMRobertaForQuestionAnsweringSeqTrm(nn.Module):
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, pq_end_pos=None, position_ids=None, head_mask=None,
                 inputs_embeds=None, start_positions=None, end_positions=None, is_impossibles=None):
 
-        outputs = self.xlmroberta(
+        outputs = self.xlm_roberta(
             input_ids=input_ids,
             attention_mask=attention_mask,
             token_type_ids=token_type_ids,
@@ -616,13 +616,7 @@ class XLMRobertaForQuestionAnsweringSeqTrm(nn.Module):
 
         logits = self.qa_outputs(sequence_output)
         start_logits, end_logits = logits.split(1, dim=-1)
-        start_logits = start_logits.squeeze(-1)
-        end_logits = end_logits.squeeze(-1)
-
-
-        outputs = (start_logits, end_logits,) + outputs[2:]
-        if start_positions is not None and end_positions is not None:
-            # If we are on multi-GPU, split add a dimension
+        start_logits = start_logits.squeeze(-1)modules
             if len(start_positions.size()) > 1:
                 start_positions = start_positions.squeeze(-1)
             if len(end_positions.size()) > 1:
