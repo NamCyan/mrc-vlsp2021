@@ -498,7 +498,9 @@ class TrmCoAttLayer(nn.Module):
         self.ffn = nn.Linear(config.hidden_size, config.intermediate_size)
         self.ffn_output = nn.Linear(config.intermediate_size, config.hidden_size)
         self.activation = ACT2FN[config.hidden_act]
-        self.apply(self._init_weights)
+
+        for module in self.modules():
+            self._init_weights(module)
 
     def _init_weights(self, module):
         """Initialize the weights"""
