@@ -58,7 +58,7 @@ class PhobertMixLayer(nn.Module):
     def forward(self, input_ids= None, token_type_ids=None, attention_mask= None, labels= None):
         outputs = self.phobert(input_ids= input_ids, token_type_ids=None, attention_mask=attention_mask, output_hidden_states= True)
         layers = outputs[2]
-        # print(len(layers))
+        print(len(layers))
         extend_attention_mask = (1.0 - attention_mask[:,None, None,:]) * -10000.0
         loss, logits = self.mixlayer(layers, extend_attention_mask, labels= labels)
         return loss, logits
