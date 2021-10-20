@@ -10,10 +10,10 @@ class HSUM(nn.Module):
         self.num_labels = num_labels
         self.pre_layers = torch.nn.ModuleList()
         self.loss_fct = torch.nn.ModuleList()
-        self.pooler = BertPooler(config)
+        self.pooler = RobertaPooler(config)
         self.classifier = torch.nn.Linear(config.hidden_size, num_labels)
         for i in range(count):
-            self.pre_layers.append(BertLayer(config))
+            self.pre_layers.append(RobertaLayer(config))
             self.loss_fct.append(torch.nn.CrossEntropyLoss(ignore_index=-1))
         self.init_weights()
 
