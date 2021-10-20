@@ -609,7 +609,7 @@ class XLMRobertaForQuestionAnsweringSeqTrm(nn.Module):
         query_sequence_output, context_sequence_output, query_attention_mask, context_attention_mask = \
             split_ques_context(sequence_output, pq_end_pos, self.args.max_query_length, self.args.max_seq_length)
 
-        if args.scques:
+        if self.sc_ques:
             sequence_output = self.att_layer(query_sequence_output, sequence_output, query_attention_mask)
         else:
             sequence_output = self.att_layer(context_sequence_output, sequence_output, context_attention_mask)
