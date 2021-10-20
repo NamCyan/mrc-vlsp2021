@@ -436,6 +436,7 @@ def main():
                 tokenizer = tokenizer_class.from_pretrained(model_files['model_file'], do_lower_case= args.do_lower_case)
             else:
                 model = model_class.from_pretrained(checkpoint)
+                tokenizer = tokenizer_class.from_pretrained(args.output_dir)
             model.to(args.device)
             result = evaluate(args, model, tokenizer, prefix=prefix)
             result = dict((k + '_{}'.format(global_step), v) for k, v in result.items())
