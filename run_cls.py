@@ -139,7 +139,7 @@ def train(args, model, tokenizer):
                         os.makedirs(output_dir)
                     
                     if "mixlayer" in args.model_type:
-                        torch.save(model_to_save.state_dict(), os.path.join(output_dir,'pytorch_model.bin'))
+                        torch.save(model.state_dict(), os.path.join(output_dir,'pytorch_model.bin'))
                     else:
                         model.save_pretrained(output_dir)
                     torch.save(args, os.path.join(output_dir, 'training_args.bin'))
@@ -413,8 +413,7 @@ def main():
             model = model_class.from_pretrained(args.output_dir)
             tokenizer = tokenizer_class.from_pretrained(args.output_dir)
         else:
-            torch.save(model_to_save.state_dict(), os.path.join(args.output_dir,'pytorch_model.bin'))
-            torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))
+            torch.save(model.state_dict(), os.path.join(args.output_dir,'pytorch_model.bin'))
             model.load_state_dict(torch.load(os.path.join(args.output_dir, 'pytorch_model.bin')))
         torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))   
         model.to(args.device)
