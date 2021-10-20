@@ -137,7 +137,11 @@ def train(args, model, tokenizer):
                     output_dir = os.path.join(args.output_dir, 'checkpoint-{}'.format(global_step))
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
-                    model.save_pretrained(output_dir)
+                    
+                    if "mixlayer" in args.model_type:
+                        torch.save(model_to_save.state_dict(), os.path.join(output_dir,'pytorch_model.bin'))
+                    else:
+                        model.save_pretrained(output_dir)
                     torch.save(args, os.path.join(output_dir, 'training_args.bin'))
                     logger.info("Saving model checkpoint to %s", output_dir)
 
