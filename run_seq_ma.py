@@ -414,7 +414,7 @@ def main():
 
     # Setup CUDA, GPU & distributed training
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     args.n_gpu = 1 #torch.cuda.device_count()
 
 
