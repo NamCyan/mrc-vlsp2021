@@ -23,14 +23,15 @@ from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler,
                               TensorDataset)
 from torch.utils.data.distributed import DistributedSampler
 from constant import MODEL_FILE
-
+from model_cls import PhobertMixLayer
 logger = logging.getLogger(__name__)
 
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
     'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
     'xlm_roberta': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer),
-    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer)
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer),
+    'phobert_mixlayer_large': (RobertaConfig, PhobertMixLayer, PhobertTokenizer)
 }
 
 def set_seed(args):
@@ -305,6 +306,10 @@ def get_args():
     parser.add_argument("--do_lower_case", action='store_true',
                         help="Set this flag if you are using an uncased model.")
 
+    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"],
+                        help="Mix type for mix layer method")
+    parser.add_argument("--mix_count", default=None, type=int,
+                        help="Number of mix layers")
     parser.add_argument('--n_gpu', type=int, default=1, 
                         help='Number of gpu to use')
     parser.add_argument('--local_rank', type=int, default= -1, 
@@ -337,6 +342,8 @@ def get_args():
 def main():
     args = get_args()
     args.output_dir = "../result/cls_{}_{}_lr{}_len{}_bs{}_ep{}_wm{}".format(args.dev_file.split("/")[-1].replace(".json", ""), args.model_type, args.lr, args.max_seq_len, args.per_gpu_train_batch_size, args.epochs, args.warmup_steps)
+    if "mixlayer" in args.model_type:
+        args.output_dir += "_mixcount{}_mixtype{}".format(args.mix_count, args.mix_type)
     for key, val in args._get_kwargs():
         print("\t{}: {}".format(key, val))
 
@@ -367,7 +374,10 @@ def main():
     else:
         tokenizer = tokenizer_class.from_pretrained(model_files['model_file'], do_lower_case= args.do_lower_case)
     tokenizer.do_lower_case = args.do_lower_case
-    model = model_class.from_pretrained(model_files['model_file'], config=config)
+    if "mixlayer" in args.model_type:
+        model = model_class(model_files['model_file'], config=config, count = args.mix_count, mix_type= args.mix_type)
+    else:
+        model = model_class.from_pretrained(model_files['model_file'], config=config)
 
 
     model.to(args.device)
@@ -391,15 +401,18 @@ def main():
         # Save a trained model, configuration and tokenizer using `save_pretrained()`.
         # They can then be reloaded using `from_pretrained()`
         # model_to_save = model.module if hasattr(model, 'module') else model  # Take care of distributed/parallel training
-        model.save_pretrained(args.output_dir)
-        tokenizer.save_pretrained(args.output_dir)
+        if not "mixlayer" in args.model_type:
+            model.save_pretrained(args.output_dir)
+            tokenizer.save_pretrained(args.output_dir)
 
-        # Good practice: save your training arguments together with the trained model
-        torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))
-
-        # Load a trained model and vocabulary that you have fine-tuned
-        model = model_class.from_pretrained(args.output_dir)
-        tokenizer = tokenizer_class.from_pretrained(args.output_dir)
+            # Load a trained model and vocabulary that you have fine-tuned
+            model = model_class.from_pretrained(args.output_dir)
+            tokenizer = tokenizer_class.from_pretrained(args.output_dir)
+        else:
+            torch.save(model_to_save.state_dict(), os.path.join(args.output_dir,'pytorch_model.bin'))
+            torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))
+            model.load_state_dict(torch.load(os.path.join(args.output_dir, 'pytorch_model.bin')))
+        torch.save(args, os.path.join(args.output_dir, 'training_args.bin'))   
         model.to(args.device)
 
     # Evaluation
@@ -415,7 +428,12 @@ def main():
             global_step = checkpoint.split('-')[-1] if len(checkpoints) > 1 else ""
             prefix = checkpoint.split('/')[-1] if checkpoint.find('checkpoint') != -1 else ""
             
-            model = model_class.from_pretrained(checkpoint)
+            if "mixlayer" in args.model_type:
+                model = model_class(model_files['model_file'], config=config, count = args.mix_count, mix_type= args.mix_type)
+                model.load_state_dict(torch.load(os.path.join(checkpoint, "pytorch_model.bin"), map_location= torch.device(args.device)))
+                tokenizer = tokenizer_class.from_pretrained(model_files['model_file'], do_lower_case= args.do_lower_case)
+            else:
+                model = model_class.from_pretrained(checkpoint)
             model.to(args.device)
             result = evaluate(args, model, tokenizer, prefix=prefix)
             result = dict((k + '_{}'.format(global_step), v) for k, v in result.items())
