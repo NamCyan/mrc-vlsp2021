@@ -547,7 +547,7 @@ def convert_examples_to_features(examples,
             pq_end_pos = [question_end_index,doc_end_index]
 
             # Display some examples
-            if example_index < 5:              
+            if example_index < 0:              
                 print("*** Example ***")
                 # *** Example ***
                 print("unique_id: %s" % (unique_id))
