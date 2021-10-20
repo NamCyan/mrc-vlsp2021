@@ -42,7 +42,7 @@ class HSUM(nn.Module):
 
 class PhobertMixLayer(nn.Module):
     def __init__(self, model_path, config, count, mix_type= "HSUM"):
-        super(PhobertForQuestionAnsweringAVPool, self).__init__()
+        super(PhobertMixLayer, self).__init__()
         self.num_labels = config.num_labels
         self.config = config
         self.count = count
