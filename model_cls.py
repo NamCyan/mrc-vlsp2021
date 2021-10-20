@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.init as init
 from transformers import RobertaModel
 from modeling import RobertaLayer, RobertaPooler
 
