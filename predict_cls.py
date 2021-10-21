@@ -10,12 +10,14 @@ from constant import MODEL_FILE
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from data_utils import get_examples, convert_examples_to_cls_features
 import json
+from model_cls import PhobertMixLayer
 
 logger = logging.getLogger(__name__)
 
 MODEL_CLASSES = {
-    'phobert': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),\
-    'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer)
+    'phobert': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
+    'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
+    'phobert_mixlayer_large': (RobertaConfig, PhobertMixLayer, PhobertTokenizer)
 }
 def set_seed(args):
     random.seed(args.seed)
@@ -33,6 +35,10 @@ def get_args():
                         help='Model path')
     parser.add_argument('--max_seq_len', type=int, default=256, 
                         help='max sequence lenght')
+    parser.add_argument("--mix_type", default=None, type=str, choices= ["HSUM", "PSUM"],
+                        help="Mix type for mix layer method")
+    parser.add_argument("--mix_count", default=None, type=int,
+                        help="Number of mix layers")
     parser.add_argument("--predict_file", default=None, type=str, required=False,
                         help="The input test data file")
     parser.add_argument('--seed', type=int, default=21, 
@@ -62,7 +68,11 @@ if __name__ == "__main__":
     config_class, model_class, tokenizer_class = MODEL_CLASSES[args.model_type]
     model_files = MODEL_FILE[args.model_type]    
     
-    model = model_class.from_pretrained(args.model_path)
+    if "mixlayer" in args.model_type:
+        model = model_class(model_files['model_file'], config=config, count = args.mix_count, mix_type= args.mix_type)
+        model.load_state_dict(torch.load(args.model_path, map_location= torch.device(args.device)))
+    else:
+        model = model_class.from_pretrained(args.model_path)
     if model_files['vocab_file'] is not None:
         tokenizer = tokenizer_class(vocab_file= model_files['vocab_file'], merges_file= model_files['merges_file'], do_lower_case= True)
     else:
