@@ -2,7 +2,6 @@ python3 ./run_seq_ma.py \
     --model_type xlm_roberta_ma_large \
     --do_train \
     --do_eval \
-    --sc_ques \
     --version_2_with_negative \
     --train_file ../data/VLSP_data/VLSP_train_split.json \
     --predict_file ../data/VLSP_data/VLSP_dev_split.json \
