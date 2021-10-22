@@ -39,6 +39,8 @@ class HSUM(nn.Module):
         if labels is not None:
             total_loss = torch.sum(torch.stack(losses), dim=0)
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
+        if labels is None:
+            return avg_logits
         return total_loss, avg_logits
 
 class PhobertMixLayer(nn.Module):
@@ -59,6 +61,11 @@ class PhobertMixLayer(nn.Module):
         outputs = self.phobert(input_ids= input_ids, token_type_ids=None, attention_mask=attention_mask, output_hidden_states= True)
         layers = outputs[2]
         extend_attention_mask = (1.0 - attention_mask[:,None, None,:]) * -10000.0
+
+        if labels is None:
+            logits = self.mixlayer(layers, extend_attention_mask, labels= labels)
+            return (logits,)
+
         loss, logits = self.mixlayer(layers, extend_attention_mask, labels= labels)
         return loss, logits
 

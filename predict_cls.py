@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from data_utils import get_examples, convert_examples_to_cls_features
 import json
 from model_cls import PhobertMixLayer
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +70,7 @@ if __name__ == "__main__":
     model_files = MODEL_FILE[args.model_type]    
     
     if "mixlayer" in args.model_type:
+        config = config_class.from_pretrained(model_files['config_file'])
         model = model_class(model_files['model_file'], config=config, count = args.mix_count, mix_type= args.mix_type)
         model.load_state_dict(torch.load(args.model_path, map_location= torch.device(args.device)))
     else:
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     num_id = 0
     key_map = {}
     cnt_map = {}
-    for batch in eval_dataloader:
+    for batch in tqdm(eval_dataloader, desc= "Evaluation"):
         model.eval()
         batch = tuple(t.to(args.device) for t in batch)
 
@@ -131,5 +133,6 @@ if __name__ == "__main__":
         # final_map[key] = key_list[1]*2
         final_map[key] = key_list[1] - key_list[0]
 
+    print(final_map)
     with open(os.path.join(args.output_dir, "test_cls_score.json"), "w") as writer:
         writer.write(json.dumps(final_map, indent=4) + "\n")

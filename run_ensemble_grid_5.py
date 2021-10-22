@@ -78,7 +78,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--input_null_files', type=str, default=
-    "cls_score1.json,cls_score2.json,ensemble/model1/null_odds.json,ensemble/model2/null_odds.json,ensemble/model3/null_odds.json"
+    "cls_score.json,ensemble/model1/null_odds.json,ensemble/model2/null_odds.json,ensemble/model3/null_odds.json"
                         )
 
     parser.add_argument('--input_nbest_files', type=str, default="ensemble/model1/nbest_predictions.json,ensemble/model2/nbest_predictions.json,ensemble/model3/nbest_predictions.json"
@@ -94,33 +94,42 @@ def main():
     parser.add_argument("--predict_test", default=False, action='store_true', help="Whether to test.")
 
     args = parser.parse_args()
+    print("Null files")
+    for null_file in args.input_null_files.split(","):
+        print(null_file)
+    print("Nbest files")
+    for null_file in args.input_nbest_files.split(","):
+        print(null_file)
+    
     examples = get_examples(args.predict_file, is_training= False)
-
+    
     if args.fin_cof is None:
         fin_cof = None
         best_score = 0.
         fin_best_cof = None
-        for C1 in range(10, -1, -1):
-            for C2 in range((10 - C1) + 1):
-                for C3 in range((10 - C1 - C2) + 1):
-                    for C4 in range((10 - C1 - C2 - C3) + 1):
-                        C5 = 10 - C1 - C2 - C3 - C4
-                        c1 = float(C1) / 10.
-                        c2 = float(C2) / 10.
-                        c3 = float(C3) / 10.
-                        c4 = float(C4) / 10.
-                        c5 = float(C5) / 10.
+        for C1 in range(100, -1, -5):
+            for C2 in range(0, (100 - C1) + 1, 5):
+                for C3 in range(0, (100 - C1 - C2) + 1, 5):
+                    for C4 in range(0, (100 - C1 - C2 - C3) + 1, 5):
+                        for C5 in range(0, (100 - C1 - C2 - C3 - C4) + 1, 5):
+                            C6 = 100 - C1 - C2 - C3 - C4 - C5
+                            c1 = float(C1) / 100.
+                            c2 = float(C2) / 100.
+                            c3 = float(C3) / 100.
+                            c4 = float(C4) / 100.
+                            c5 = float(C5) / 100.
+                            c6 = float(C6) / 100.
 
-                        cof = [c1, c2, c3, c4, c5]
-                        best_cof = [1, 1, 1]
-                        scores = get_score1(cof, best_cof, args, examples)
-                        score = scores['best_f1']
-                        if score > best_score:
-                            best_score = score
-                            fin_cof = cof
-                            fin_best_cof = best_cof
-                        print("cur_score", score, "\t", cof, "\t", best_cof,"\t", "cur_best", best_score, "\t", fin_cof,
-                              "\t", fin_best_cof)
+                            cof = [c1, c2, c3, c4, c5, c6]
+                            best_cof = [1, 1, 1, 1, 1]
+                            scores = get_score1(cof, best_cof, args, examples)
+                            score = scores['best_f1']
+                            if score > best_score:
+                                best_score = score
+                                fin_cof = cof
+                                fin_best_cof = best_cof
+                            print("cur_score", score, "\t", cof, "\t", best_cof,"\t", "cur_best", best_score, "\t", fin_cof,
+                                  "\t", fin_best_cof)
     else:
         fin_cof = [float(x.strip()) for x in args.fin_cof.split(",")]
 
@@ -129,23 +138,27 @@ def main():
         best_thresh = 0.
         fin_best_cof = None
 
-        for C1 in range(10, -1, -1):
-            for C2 in range((10 - C1) + 1):
-                C3 = 10 - C1 - C2
-                c1 = float(C1)/10.
-                c2 = float(C2)/10.
-                c3 = float(C3)/10.
+        for C1 in range(100, -1, -5):
+            for C2 in range(0, (100 - C1) + 1, 5):
+                for C3 in range(0, (100 - C2 - C1) + 1, 5):
+                    for C4 in range(0, (100 - C2 - C1 - C3) + 1, 5):
+                        C5 = 100 - C1 - C2 - C3 - C4
+                        c1 = float(C1)/100.
+                        c2 = float(C2)/100.
+                        c3 = float(C3)/100.
+                        c4 = float(C4)/100.
+                        c5 = float(C5)/100.
 
-                cof = fin_cof
-                best_cof = [c1, c2, c3]
-                scores = get_score1(cof, best_cof, args, examples)
-                score = scores['best_f1']
-                if score > best_score:
-                    best_score = score
-                    best_thresh = scores['best_f1_thresh']
-                    fin_cof = cof
-                    fin_best_cof=best_cof
-                print("cur_score", score, "\t", cof, "\t", best_cof, "\t","cur_best", best_score, "\t", fin_cof, "\t", fin_best_cof)
+                        cof = fin_cof
+                        best_cof = [c1, c2, c3, c4, c5]
+                        scores = get_score1(cof, best_cof, args, examples)
+                        score = scores['best_f1']
+                        if score > best_score:
+                            best_score = score
+                            best_thresh = scores['best_f1_thresh']
+                            fin_cof = cof
+                            fin_best_cof=best_cof
+                        print("cur_score", score, "\t", cof, "\t", best_cof, "\t","cur_best", best_score, "\t", fin_cof, "\t", fin_best_cof)
     else:
         fin_best_cof = [float(x.strip()) for x in args.fin_best_cof.split(",")]
     
