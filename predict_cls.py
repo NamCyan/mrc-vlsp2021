@@ -4,7 +4,7 @@ import torch
 import random
 import numpy as np
 from constant import MODEL_FILE
-from transformers import WEIGHTS_NAME, RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer
+from transformers import WEIGHTS_NAME, RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer, XLMRobertaConfig, XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import logging
 from constant import MODEL_FILE
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
@@ -18,7 +18,8 @@ logger = logging.getLogger(__name__)
 MODEL_CLASSES = {
     'phobert': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
     'phobert_large': (RobertaConfig, RobertaForSequenceClassification, PhobertTokenizer),
-    'phobert_mixlayer_large': (RobertaConfig, PhobertMixLayer, PhobertTokenizer)
+    'phobert_mixlayer_large': (RobertaConfig, PhobertMixLayer, PhobertTokenizer),
+    'xlm_roberta_large': (XLMRobertaConfig, XLMRobertaForSequenceClassification, XLMRobertaTokenizer),
 }
 def set_seed(args):
     random.seed(args.seed)
