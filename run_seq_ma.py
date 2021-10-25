@@ -119,18 +119,18 @@ def train(args, train_dataset, model, tokenizer):
             model.train()
             batch = tuple(t.to(args.device) for t in batch)
 
-            inputs = {
-                'input_ids':       batch[0],
-                'attention_mask':  batch[1],
-                'start_positions': batch[3],
-                'end_positions':   batch[4],
-                'is_impossibles':   batch[5],
-                'pq_end_pos':   batch[6],
-            }
+            # inputs = {
+            #     'input_ids':       batch[0],
+            #     'attention_mask':  batch[1],
+            #     'start_positions': batch[3],
+            #     'end_positions':   batch[4],
+            #     'is_impossibles':   batch[5],
+            #     'pq_end_pos':   batch[6],
+            # }
             if 'phobert' not in args.model_type and 'roberta' not in args.model_type:
                 inputs['token_type_ids'] = batch[2]
 
-            outputs = model(**inputs)
+            outputs = model(input_ids= batch[0], attention_mask= batch[1], start_positions= batch[3], end_positions= batch[4], is_impossibles= batch[5], pq_end_pos= batch[6])
             loss = outputs[0]  # model outputs are always tuple in transformers (see doc)
 
             if args.n_gpu > 1:
@@ -222,7 +222,7 @@ def evaluate(args, model, tokenizer, prefix=""):
                 
             example_indices = batch[3]
 
-            outputs = model(**inputs)
+            outputs = model(input_ids= batch[1], attention_mask= batch[1], pq_end_pos= batch[5],)
 
         for i, example_index in enumerate(example_indices):
             eval_feature = features[example_index.item()]
