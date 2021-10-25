@@ -358,6 +358,8 @@ def get_args():
                         help="Attention question or context")
     parser.add_argument("--mix_count", type=int, default= 4,
                         help="Mix count")
+    parser.add_argument("--mix_type", type=str, default= 'HSUM',
+                        help="Mix type")
 
     parser.add_argument("--per_gpu_train_batch_size", default=32, type=int,
                         help="Batch size per GPU/CPU for training.")
@@ -411,6 +413,8 @@ def main():
     
     args = get_args()
     args.output_dir = "../result/av_single_{}_{}_lr{}_len{}_bs{}_ep{}_wm{}_scques{}".format(args.predict_file.split("/")[-1].replace(".json", ""), args.model_type, args.learning_rate, args.max_seq_length, args.per_gpu_train_batch_size, args.num_train_epochs, args.warmup_steps, args.sc_ques)
+    if "mixlayer" in args.model_type:
+        args.output_dir += "_mixcount{}_mixtype{}".format(args.mix_count, args.mix_type)
     if os.path.exists(args.output_dir) and os.listdir(args.output_dir) and args.do_train and not args.overwrite_output_dir:
         raise ValueError("Output directory ({}) already exists and is not empty. Use --overwrite_output_dir to overcome.".format(args.output_dir))
 
@@ -444,7 +448,7 @@ def main():
         tokenizer.do_lower_case = args.do_lower_case
 
     if "mixlayer" in args.model_type:
-        model = model_class(model_files['model_file'], config= config, args= args, count= args.mix_count, sc_ques= args.sc_ques)
+        model = model_class(model_files['model_file'], config= config, args= args, count= args.mix_count, mix_type = args.mix_type, sc_ques= args.sc_ques)
     else:
         model = model_class(model_files['model_file'], config= config, args= args, sc_ques= args.sc_ques)
 

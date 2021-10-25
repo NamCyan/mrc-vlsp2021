@@ -646,14 +646,17 @@ class XLMRobertaForQuestionAnsweringSeqTrm(nn.Module):
         return outputs  # (loss), start_logits, end_logits, (hidden_states), (attentions)
 
 class XLMRobertaForQuestionAnsweringSeqTrmMixLayer(nn.Module):
-    def __init__(self, model_path, config, args, count=4, sc_ques= True):
+    def __init__(self, model_path, config, args, count=4, mix_type= "HSUM", sc_ques= True):
         super(XLMRobertaForQuestionAnsweringSeqTrmMixLayer, self).__init__()
         self.args = args
         self.config = config
         self.num_labels = config.num_labels
         self.sc_ques = sc_ques
         self.count = count
-        self.mixlayer = HSUM(count, config, 2)
+        if mix_type == "HSUM":     
+            self.mixlayer = HSUM(count, config, 2)
+        elif mix_type == "PSUM":
+            self.mixlayer = PSUM(count, config, 2)
         self.xlm_roberta = XLMRobertaModel.from_pretrained(model_path, config= config)
         self.att_layer = TrmCoAttLayer(config)
         self.qa_outputs = nn.Linear(config.hidden_size, config.num_labels)
