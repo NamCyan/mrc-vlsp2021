@@ -171,9 +171,6 @@ class HSUM(nn.Module):
             else:
                 logits = output 
             logitses.append(logits)
-        
-        if return_output:
-            return output
 
         avg_logits = torch.sum(torch.stack(logitses), dim=0)/self.count
         return avg_logits
