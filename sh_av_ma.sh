@@ -1,6 +1,7 @@
 python3 ./run_seq_ma.py \
     --model_type xlm_roberta_ma_mixlayer_large \
     --mix_count 4 \
+    --mix_type HSUM \
     --do_train \
     --do_eval \
     --version_2_with_negative \
