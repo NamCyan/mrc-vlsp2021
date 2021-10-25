@@ -65,6 +65,10 @@ def get_score1(cof, best_cof, args, examples):
         with open("results.json", "w") as f:
             json.dump(output_predictions, f, indent= 4)
         return output_predictions
+    elif args.predict_pri_test:
+        with open("pri_results.json", "w") as f:
+            json.dump(output_predictions, f, indent= 4)
+        return output_predictions
     else:
         with open("valid_predictions.json", "w") as f:
             json.dump(output_predictions, f, indent= 4)
