@@ -49,6 +49,7 @@ logger = logging.getLogger(__name__)
 MODEL_CLASSES = {
     'xlm_roberta_ma_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqTrm, XLMRobertaTokenizer),
     'xlm_roberta_ma': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqTrm, XLMRobertaTokenizer),
+    'xlm_roberta_ma_mixlayer_large': (XLMRobertaConfig, XLMRobertaForQuestionAnsweringSeqTrmMixLayer, XLMRobertaTokenizer),
 }
 
 def set_seed(args):
@@ -355,6 +356,8 @@ def get_args():
                         help="Set this flag if you are using an uncased model.")
     parser.add_argument("--sc_ques", action='store_true',
                         help="Attention question or context")
+    parser.add_argument("--mix_count", type=int, default= 4,
+                        help="Mix count")
 
     parser.add_argument("--per_gpu_train_batch_size", default=32, type=int,
                         help="Batch size per GPU/CPU for training.")
@@ -440,8 +443,10 @@ def main():
     if args.model_type != 'vibert':
         tokenizer.do_lower_case = args.do_lower_case
 
- 
-    model = model_class(model_files['model_file'], config= config, args= args, sc_ques= args.sc_ques)
+    if "mixlayer" in args.model_type:
+        model = model_class(model_files['model_file'], config= config, args= args, count= args.mix_count, sc_ques= args.sc_ques)
+    else:
+        model = model_class(model_files['model_file'], config= config, args= args, sc_ques= args.sc_ques)
 
     model.to(args.device)
 

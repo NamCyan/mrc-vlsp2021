@@ -33,6 +33,11 @@ MODEL_FILE = {
                     "config_file": "xlm-roberta-large",
                     "merges_file": None,
                     "vocab_file": None},
+    
+    'xlm_roberta_ma_mixlayer_large':{"model_file": "xlm-roberta-large",
+                                      "config_file": "xlm-roberta-large",
+                                      "merges_file": None,
+                                      "vocab_file": None},
 
     'xlm_roberta_mixlayer_sc_large': {"model_file": "xlm-roberta-large",
                                       "config_file": "xlm-roberta-large",
