@@ -677,7 +677,7 @@ class XLMRobertaForQuestionAnsweringSeqTrmMixLayer(nn.Module):
         )
 
         layers = outputs[2]
-        # print(len(layers))
+        print(len(layers))
         
         extend_attention_mask = (1.0 - attention_mask[:,None, None, :]) * -10000.0
         sequence_output = self.mixlayer(layers, extend_attention_mask, return_output = True)

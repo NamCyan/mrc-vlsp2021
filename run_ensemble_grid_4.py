@@ -96,6 +96,7 @@ def main():
     parser.add_argument('--fin_cof', type=str, default= None)
     parser.add_argument('--fin_best_cof', type=str, default= None)
     parser.add_argument("--predict_test", default=False, action='store_true', help="Whether to test.")
+    parser.add_argument("--predict_pri_test", default=False, action='store_true', help="private test is in used.")
 
     args = parser.parse_args()
     print("Null files")
