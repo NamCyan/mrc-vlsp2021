@@ -1,1 +1,1 @@
-Repo for Machine Reading Comprehension task in the contest VLSP in year 2021
+1st place in the VLSP Machine Reading Comprehension task 2021
