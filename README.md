@@ -13,8 +13,8 @@
 
 * System overview
 
-<p>
-  <img src="./asset/overview_approach.PNG" width="400px" alt="gradient descent based algorithm">
+<p align="center">
+  <img src="./asset/overview_approach.PNG" width="600px" alt="Overview approach">
 </p>
 
 # Experimental results
