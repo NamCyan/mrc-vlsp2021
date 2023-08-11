@@ -11,7 +11,11 @@
 
 # Methodology
 
-* System overview
+We use two modules in our MRC system. 
+
+- A classifier module is used to **determine whether a question is answerable** when giving a passage, called Answerability Classification Module (ACM).
+
+- Answer Extraction Module (AEM) aims to **extract the answer** from the passage.
 
 <p align="center">
   <img src="./asset/overview_approach.PNG" width="600px" alt="Overview approach">
