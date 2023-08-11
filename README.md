@@ -13,7 +13,9 @@
 
 * System overview
 
-![system_overview](./asset/overview_approach.PNG)
+<p>
+  <img src="./asset/overview_approach.PNG" width="400px" alt="gradient descent based algorithm">
+</p>
 
 # Experimental results
 ![mrc_rs](./asset/mrc_result.png)
