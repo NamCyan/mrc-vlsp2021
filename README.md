@@ -20,7 +20,7 @@ We use two modules in our MRC system.
 - Answer Extraction Module (AEM) aims to **extract the answer** from the passage.
 
 <p align="center">
-  <img src="./asset/overview_approach.PNG" width="600px" alt="Overview approach">
+  <img src="./asset/overview_approach.PNG" width="500px" alt="Overview approach">
 </p>
 
 # Experimental results
