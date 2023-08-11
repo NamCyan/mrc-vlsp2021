@@ -13,7 +13,7 @@
 
 * System overview
 
-![system_overview](./asset/system_overview.png)
+![system_overview](./asset/overview_approach.PNG)
 
 # Experimental results
 ![mrc_rs](./asset/mrc_result.png)
