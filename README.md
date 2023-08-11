@@ -3,7 +3,7 @@
 
 This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp.org.vn/vlsp2021) competition of Machine Reading Comprehension Shared Task. Our team achieves the **1st rank** in the competition. More detail about task description, dataset, and ranking scores is provided in [VLSP_MRC](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/340). 
 
-# Contributions
+## Contributions
 
 1. This work introduces a more **appropriate way to apply attention mechanism variants** and utilize **layer aggregation** techniques to improve Retro-Reader and apply it to Vietnamese MRC.
 
@@ -11,7 +11,7 @@ This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp
 
 3. Experiments show that our methods can yield substantial improvements to Retro-Reader and attain the **1st rank** in VLSP2021-MRC Shared Task.
 
-# Methodology
+## Methodology
 
 We use two modules in our MRC system. 
 
@@ -23,10 +23,13 @@ We use two modules in our MRC system.
   <img src="./asset/overview_approach.PNG" width="500px" alt="Overview approach">
 </p>
 
-# Experimental results
-![mrc_rs](./asset/mrc_result.png)
+## Experimental results
 
-# Leader board
+<p align="center">
+  <img src="./asset/mrc_result.png" width="800px" alt="Result">
+</p>
+
+## Leader board
 
 * Public test
 
