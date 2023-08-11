@@ -3,7 +3,7 @@
 
 
 # Citation
-More details can be found in our [paper](https://link.springer.com/chapter/10.1007/978-3-031-05933-9_2](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/346).
+More details can be found in our [paper](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/346).
 
 If you're using ALV in your research or applications, please cite using this BibTeX:
 ```bibtex
