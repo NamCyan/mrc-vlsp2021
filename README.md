@@ -1,6 +1,20 @@
 # ViMRC-VLSP 2021: Improving Retrospective Reader for Vietnamese Machine Reading Comprehension
 *1st place in the Machine Reading Comprehension at VLSP 2021*
 
+# Contributions
+
+1. This work introduces a more **appropriate way to apply attention mechanism variants** and utilize **layer aggregation** techniques to improve Retro-Reader and apply to Vietnamese MRC.
+
+2. We present an **ensemble approach** to achieve outstanding results.
+
+3. Experiments show that our methods can yield substantial improvements to Retro-Reader and attain the **1st rank** in VLSP2021-MRC Shared Task.
+
+# Methodology
+
+* System overview
+
+![system_overview](./asset/system_overview.png)
+
 # Experimental results
 ![mrc_rs](./asset/mrc_result.png)
 
