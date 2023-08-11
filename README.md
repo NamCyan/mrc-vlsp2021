@@ -40,16 +40,14 @@ We use two modules in our MRC system.
 ## Leader board
 
 * Public test # Private test
-  
-<div align="center">
+
 |  Rank       | Team        | F1           | EM           | # |  Rank       | Team        | F1           | EM           |
-|:------------|:------------|-------------:|-------------:|-:|:------------|:------------|-------------:|-------------:|
+|:------------|:------------|-------------:|-------------:|--:|:------------|:------------|-------------:|-------------:|
 |             | Human       | 87.335       | 81.818       | # |             | Human       | 82.849       | 75.500       | 
 | 1           | NLP_HUST    | **84.236**   | 77.728       | # | 1           | Our team    | **77.241**   | 66.137       |
 | 2           | NTQ         | 84.089       | **77.990**   | # | 2           | ebisu_uit   | 77.222       | **67.430**   |
 | 3           | ebisu_uit   | 82.622       | 73.698       | # | 3           | F-NLP       | 76.456       | 64.655       |
 | 4           | Our team    | 81.013       | 71.316       | # | | | |
-</div>
 
 ## Citation
 More details can be found in our [paper](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/346).
