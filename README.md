@@ -8,7 +8,7 @@ This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp
 - [Methodology](#methodology)
 - [Experimental results](#experiment-results)
 - [Leader board](#leader-board)
-- [Contact us](#citation)
+- [Citation](#citation)
 - [Contact us](#contact-us)
 
 ## Contributions
