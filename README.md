@@ -2,7 +2,7 @@
 *1st place in the Machine Reading Comprehension at VLSP 2021*
 
 # Experimental results
-
+![mrc_rs](./asset/mrc_result.png)
 
 # Leader board
 
