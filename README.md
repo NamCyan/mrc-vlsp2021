@@ -52,7 +52,7 @@ We use two modules in our MRC system.
 ## Citation
 More details can be found in our [paper](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/346).
 
-If you're using ALV in your research or applications, please cite using this BibTeX:
+If you're using our work in your research or applications, please cite using this BibTeX:
 ```bibtex
 @article{nam2022vimrc,
   title={ViMRC-VLSP 2021: Improving Retrospective Reader for Vietnamese Machine Reading Comprehension},
