@@ -1,7 +1,7 @@
 # ViMRC-VLSP 2021: Improving Retrospective Reader for Vietnamese Machine Reading Comprehension
 *1st place in the Machine Reading Comprehension at VLSP 2021*
 
-This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp.org.vn/vlsp2021) competition of Machine Reading Comprehension Shared Task. Our team achieves the **1st rank** in the competition. More detail about task description, dataset, and ranking scores is provided in [VLSP_MRC](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/340). 
+This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp.org.vn/vlsp2021) competition of Machine Reading Comprehension Shared Task. Our team achieves the **1st rank** in the competition. More detail about task description, dataset, and ranking scores is provided in the organizer's report [VLSP 2021-ViMRC Challenge: Vietnamese Machine Reading Comprehension](https://jcsce.vnu.edu.vn/index.php/jcsce/article/view/340). 
 
 ## Table of content
 - [Contributions](#contributions)
@@ -13,11 +13,11 @@ This repository contains code for the vc-tus team in the [VLSP2021](https://vlsp
 
 ## Contributions
 
-1. This work introduces a more **appropriate way to apply attention mechanism variants** and utilize **layer aggregation** techniques to improve Retro-Reader and apply it to Vietnamese MRC.
+1. This work introduces a more **appropriate way to apply attention mechanism variants** and utilize **layer aggregation** techniques to improve Retro-Reader and apply it to the Vietnamese MRC problem.
 
 2. We present an **ensemble approach** to achieve outstanding results.
 
-3. Experiments show that our methods can yield substantial improvements to Retro-Reader and attain the **1st rank** in VLSP2021-MRC Shared Task.
+3. Experimental results show that our methods can yield substantial improvements to Retro-Reader and attain the **1st rank** in VLSP2021-MRC Shared Task.
 
 ## Methodology
 
